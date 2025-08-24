@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BELL SEKOLAH SMPN 5 RANCAEKEK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .bell-animation {
+            animation: ring 2s ease-in-out infinite;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        .active-bell {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        .wave-animation {
+            animation: wave 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <div class="flex items-center justify-center mb-4">
+                <div class="bell-animation bg-white p-4 rounded-full shadow-lg">
+                    <svg class="w-12 h-12 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                    </svg>
+                </div>
+            </div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Bell Sekolah SMPN 5 Rancaekek</h1>
+            <p class="text-lg text-gray-600">Yuk kita kelola jadwal bell sekolah dengan mudah!!</p>
+        </header>
+
+        <!-- Real-time Clock -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 text-center wave-animation">
+            <div class="text-5xl font-mono font-bold text-blue-600 mb-2" id="realTimeClock">00:00:00</div>
+            <div class="text-xl text-gray-600" id="realTimeDate">Senin, 1 Januari 2024</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Bell Schedule Section -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-6 h-6 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    Kelola Jadwal
+                </h2>
+                
+                <div class="mb-6">
+                    <button onclick="showAddScheduleModal()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Tambah Jadwal Baru
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Waktu</th>
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Nama</th>
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Suara</th>
+                                <th class="text-left py-3 px-4 text-sm font-semibold text-gray-600">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scheduleList">
+                            <!-- Schedule items will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sound Management Section -->
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <svg class="w-6 h-6 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"/>
+                    </svg>
+                    Kelola Suara
+                </h2>
+
+                <div class="mb-6">
+                    <input type="file" id="soundUpload" accept="audio/*" class="hidden">
+                    <button onclick="document.getElementById('soundUpload').click()" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        Tambah Suara Baru
+                    </button>
+                </div>
+
+                <div class="space-y-3" id="soundList">
+                    <!-- Sound items will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Next Bell Info -->
+        <div class="bg-blue-600 text-white rounded-2xl shadow-lg p-6 mt-8 text-center">
+            <h3 class="text-xl font-semibold mb-2">Bell Berikutnya</h3>
+            <div class="text-3xl font-bold" id="nextBellTime">--:--</div>
+            <div class="text-lg opacity-90" id="nextBellName">Tidak ada jadwal</div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="addScheduleModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Tambah Jadwal Bell</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Nama Jadwal</label>
+                    <input type="text" id="scheduleName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Waktu</label>
+                    <input type="time" id="scheduleTime" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Suara</label>
+                    <select id="scheduleSound" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Pilih suara...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex space-x-3 mt-6">
+                <button onclick="hideAddScheduleModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-lg font-semibold transition duration-200">
+                    Batal
+                </button>
+                <button onclick="saveSchedule()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition duration-200">
+                    Simpan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let schedules = JSON.parse(localStorage.getItem('bellSchedules')) || [];
+        let sounds = JSON.parse(localStorage.getItem('bellSounds')) || [];
+        let currentEditId = null;
+
+        // Initialize
+        function init() {
+            updateRealTimeClock();
+            setInterval(updateRealTimeClock, 1000);
+            loadSchedules();
+            loadSounds();
+            checkSchedules();
+            setInterval(checkSchedules, 10000); // Check every 10 seconds
+            
+            // Handle file upload
+            document.getElementById('soundUpload').addEventListener('change', handleSoundUpload);
+        }
+
+        // Real-time clock
+        function updateRealTimeClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('id-ID');
+            const dateString = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            document.getElementById('realTimeClock').textContent = timeString;
+            document.getElementById('realTimeDate').textContent = dateString;
+        }
+
+        // Load schedules
+        function loadSchedules() {
+            const scheduleList = document.getElementById('scheduleList');
+            scheduleList.innerHTML = '';
+            
+            schedules.sort((a, b) => a.time.localeCompare(b.time));
+            
+            schedules.forEach(schedule => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-gray-200 hover:bg-gray-50';
+                tr.innerHTML = `
+                    <td class="py-3 px-4 font-mono">${schedule.time}</td>
+                    <td class="py-3 px-4">${schedule.name}</td>
+                    <td class="py-3 px-4">${schedule.soundName}</td>
+                    <td class="py-3 px-4">
+                        <button onclick="editSchedule('${schedule.id}')" class="text-blue-600 hover:text-blue-800 mr-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                            </svg>
+                        </button>
+                        <button onclick="deleteSchedule('${schedule.id}')" class="text-red-600 hover:text-red-800">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </td>
+                `;
+                scheduleList.appendChild(tr);
+            });
+            
+            updateNextBell();
+        }
+
+        // Load sounds
+        function loadSounds() {
+            const soundList = document.getElementById('soundList');
+            const soundSelect = document.getElementById('scheduleSound');
+            
+            soundList.innerHTML = '';
+            soundSelect.innerHTML = '<option value="">Pilih suara...</option>';
+            
+            sounds.forEach(sound => {
+                // Add to dropdown
+                const option = document.createElement('option');
+                option.value = sound.id;
+                option.textContent = sound.name;
+                soundSelect.appendChild(option);
+                
+                // Add to sound list
+                const div = document.createElement('div');
+                div.className = 'flex items-center justify-between p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"/>
+                        </svg>
+                        <span class="font-medium">${sound.name}</span>
+                    </div>
+                    <div>
+                        <button onclick="playSound('${sound.id}')" class="text-blue-600 hover:text-blue-800 mr-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                        <button onclick="deleteSound('${sound.id}')" class="text-red-600 hover:text-red-800">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                soundList.appendChild(div);
+            });
+        }
+
+        // Handle sound upload
+        function handleSoundUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('audio/')) {
+                alert('Silakan pilih file audio yang valid');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const sound = {
+                    id: Date.now().toString(),
+                    name: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+                    data: e.target.result,
+                    type: file.type
+                };
+                
+                sounds.push(sound);
+                localStorage.setItem('bellSounds', JSON.stringify(sounds));
+                loadSounds();
+                
+                // Reset file input
+                event.target.value = '';
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Play sound
+        function playSound(soundId) {
+            const sound = sounds.find(s => s.id === soundId);
+            if (sound) {
+                const audio = new Audio(sound.data);
+                audio.play();
+            }
+        }
+
+        // Delete sound
+        function deleteSound(soundId) {
+            if (confirm('Apakah Anda yakin ingin menghapus suara ini?')) {
+                sounds = sounds.filter(s => s.id !== soundId);
+                localStorage.setItem('bellSounds', JSON.stringify(sounds));
+                loadSounds();
+            }
+        }
+
+        // Schedule modal functions
+        function showAddScheduleModal(editId = null) {
+            currentEditId = editId;
+            const modal = document.getElementById('addScheduleModal');
+            
+            if (editId) {
+                const schedule = schedules.find(s => s.id === editId);
+                if (schedule) {
+                    document.getElementById('scheduleName').value = schedule.name;
+                    document.getElementById('scheduleTime').value = schedule.time;
+                    document.getElementById('scheduleSound').value = schedule.soundId;
+                }
+            } else {
+                document.getElementById('scheduleName').value = '';
+                document.getElementById('scheduleTime').value = '';
+                document.getElementById('scheduleSound').value = '';
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function hideAddScheduleModal() {
+            document.getElementById('addScheduleModal').classList.add('hidden');
+        }
+
+        function saveSchedule() {
+            const name = document.getElementById('scheduleName').value.trim();
+            const time = document.getElementById('scheduleTime').value;
+            const soundId = document.getElementById('scheduleSound').value;
+            
+            if (!name || !time || !soundId) {
+                alert('Silakan isi semua field');
+                return;
+            }
+            
+            const sound = sounds.find(s => s.id === soundId);
+            if (!sound) {
+                alert('Suara tidak valid');
+                return;
+            }
+            
+            if (currentEditId) {
+                // Edit existing schedule
+                const index = schedules.findIndex(s => s.id === currentEditId);
+                if (index !== -1) {
+                    schedules[index] = {
+                        ...schedules[index],
+                        name,
+                        time,
+                        soundId,
+                        soundName: sound.name
+                    };
+                }
+            } else {
+                // Add new schedule
+                schedules.push({
+                    id: Date.now().toString(),
+                    name,
+                    time,
+                    soundId,
+                    soundName: sound.name
+                });
+            }
+            
+            localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+            loadSchedules();
+            hideAddScheduleModal();
+        }
+
+        function editSchedule(id) {
+            showAddScheduleModal(id);
+        }
+
+        function deleteSchedule(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus jadwal ini?')) {
+                schedules = schedules.filter(s => s.id !== id);
+                localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+                loadSchedules();
+            }
+        }
+
+        // Check schedules and play sounds
+        function checkSchedules() {
+            const now = new Date();
+            const currentTime = now.toTimeString().substring(0, 5); // HH:MM format
+            
+            schedules.forEach(schedule => {
+                if (schedule.time === currentTime) {
+                    playSound(schedule.soundId);
+                    
+                    // Visual feedback
+                    const header = document.querySelector('header');
+                    header.classList.add('active-bell');
+                    setTimeout(() => {
+                        header.classList.remove('active-bell');
+                    }, 2000);
+                }
+            });
+        }
+
+        // Update next bell information
+        function updateNextBell() {
+            const now = new Date();
+            const currentTime = now.toTimeString().substring(0, 5);
+            
+            const upcomingSchedules = schedules
+                .filter(s => s.time >= currentTime)
+                .sort((a, b) => a.time.localeCompare(b.time));
+            
+            const nextBellTime = document.getElementById('nextBellTime');
+            const nextBellName = document.getElementById('nextBellName');
+            
+            if (upcomingSchedules.length > 0) {
+                nextBellTime.textContent = upcomingSchedules[0].time;
+                nextBellName.textContent = upcomingSchedules[0].name;
+            } else if (schedules.length > 0) {
+                // If no more schedules today, show first schedule of next day
+                nextBellTime.textContent = schedules[0].time;
+                nextBellName.textContent = schedules[0].name + ' (Besok)';
+            } else {
+                nextBellTime.textContent = '--:--';
+                nextBellName.textContent = 'Tidak ada jadwal';
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+    <!-- Footer -->
+        <footer class="text-center mt-12 opacity-80">
+            <p>© 2025 Bell Sekolah Digital V1.01 by nj-dejunk <i class="fas fa-heart text-red-400"></i></p>
+        </footer>
+</body>
+</html>
+
