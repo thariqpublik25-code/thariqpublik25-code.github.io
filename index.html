@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BELL SEKOLAH SMPN 5 RANCAEKEK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .bell-animation {
+            animation: ring 2s ease-in-out infinite;
+        }
+        
+        @keyframes ring {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+            75% { transform: rotate(5deg); }
+        }
+        
+        .active-bell {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        
+        .wave-animation {
+            animation: wave 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+    
+    <!-- style tulisan berjalan -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            padding: 50px;
+        }
+        .marquee {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+        .marquee p {
+            display: inline-block;
+            padding-left: 100%;
+            animation: marquee 30s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-100%, 0); }
+        }
+    </style>
+
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        
+        <header class="text-center mb-8">
+                      
+
+            <h1 style="font-family: Clarendon Blk BT, sans-serif;"class="text-3xl font-bold text-gray-800 mb-2">SMPN 5 RANCAEKEK</h1>
+            <div style="display: flex; justify-content: center;"><img src="SEM.jpg" /> </div>
+                <div class="mt-4">
+                <button id="statusToggle" class="px-6 py-2 rounded-full font-semibold bell-inactive">
+                    Bell: NON AKTIF
+                </button>
+                <!-- Realtime Clock -->
+                <div style="font-family: Franklin Gothic Heavy, sans-serif;" id="realtimeClock" class="mt-2 text-lg font-semibold text-gray-700"></div>
+            </div>
+
+            <div class="marquee">
+                <p>Selamat datang di Sekolah kita tercinta SMPN 5 Rancaekek</p>
+            </div>
+        </header>
+
+
+        
+
+
+
+        <!-- Main Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Left Column - Sound Management -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Kelola Suara Bell</h2>
+                
+                <!-- Add Sound Form -->
+                <form id="addSoundForm" class="mb-6 p-4 bg-blue-50 rounded-lg">
+                    <h3 class="font-semibold mb-3 text-blue-800">Tambah Suara</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nama Suara</label>
+                            <input type="text" id="soundName" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="Contoh: Bell Masuk, Bell Istirahat">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">File Suara (MP3, WAV)</label>
+                            <input type="file" id="soundFile" accept="audio/*" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <p class="text-xs text-gray-500 mt-1">Pilih file audio dari komputer Anda</p>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition">
+                            Tambah
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Sounds List -->
+                <div>
+                    <h3 class="font-semibold mb-3 text-gray-700">Daftar Suara Tersedia</h3>
+                    <div id="soundsList" class="space-y-2 max-h-60 overflow-y-auto">
+                        <!-- Sounds will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Schedule Forms -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Kelola Jadwal Bell</h2>
+                
+                <!-- Schedule Forms Sections -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Form Pagi (15 jadwal) -->
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-semibold mb-3 text-green-800">Jadwal Pagi </h3>
+                        <div id="morningSchedules" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Morning schedules will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Form Siang (15 jadwal) -->
+                    <div class="bg-orange-50 p-4 rounded-lg">
+                        <h3 class="font-semibold mb-3 text-orange-800">Jadwal Siang </h3>
+                        <div id="afternoonSchedules" class="space-y-3 max-h-96 overflow-y-auto">
+                            <!-- Afternoon schedules will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Element -->
+    <audio id="bellAudio" preload="auto"></audio>
+
+    <script>
+        // Data structure
+        let bellStatus = false;
+        let sounds = [];
+        let schedules = [];
+        let lastTriggered = null; // Tambahan untuk mencegah bunyi berulang
+
+        // DOM Elements
+        const statusToggle = document.getElementById('statusToggle');
+        const addSoundForm = document.getElementById('addSoundForm');
+        const soundFileInput = document.getElementById('soundFile');
+        const soundsList = document.getElementById('soundsList');
+        const morningSchedules = document.getElementById('morningSchedules');
+        const afternoonSchedules = document.getElementById('afternoonSchedules');
+        const bellAudio = document.getElementById('bellAudio');
+        const realtimeClock = document.getElementById('realtimeClock'); // New: Get realtime clock element
+
+        // Initialize data
+        function initData() {
+            const savedSounds = localStorage.getItem('bellSounds');
+            const savedSchedules = localStorage.getItem('bellSchedules');
+            const savedStatus = localStorage.getItem('bellStatus');
+
+            if (savedSounds) sounds = JSON.parse(savedSounds);
+            if (savedSchedules) schedules = JSON.parse(savedSchedules);
+            if (savedStatus) bellStatus = savedStatus === 'true';
+
+            updateStatusUI();
+            renderSounds();
+            renderSchedules();
+            startBellChecker();
+            updateRealtimeClock(); // New: Start realtime clock
+        }
+
+        function updateStatusUI() {
+            if (bellStatus) {
+                statusToggle.textContent = 'Bell: AKTIF';
+                statusToggle.className = 'px-6 py-2 rounded-full font-semibold bg-green-500 text-white';
+            } else {
+                statusToggle.textContent = 'Bell: NON AKTIF';
+                statusToggle.className = 'px-6 py-2 rounded-full font-semibold bg-gray-400 text-white';
+            }
+        }
+
+        function renderSounds() {
+            soundsList.innerHTML = '';
+            
+            if (sounds.length === 0) {
+                soundsList.innerHTML = `
+                    <div class="text-center py-4 text-gray-500">
+                        <p>Belum ada suara yang ditambahkan</p>
+                        <p class="text-sm">Tambahkan suara</p>
+                    </div>
+                `;
+                return;
+            }
+
+            sounds.forEach((sound, index) => {
+                const soundElement = document.createElement('div');
+                soundElement.className = 'sound-item flex items-center justify-between p-3 bg-gray-100 rounded-lg';
+                soundElement.innerHTML = `
+                    <div class="flex-1">
+                        <span class="font-medium">${sound.name}</span>
+                        <p class="text-xs text-gray-500">${sound.type}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="playSound(${index})" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+                            Play
+                        </button>
+                        <button onclick="deleteSound(${index})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-sm">
+                            Delete
+                        </button>
+                    </div>
+                `;
+                soundsList.appendChild(soundElement);
+            });
+        }
+
+        function renderSchedules() {
+            morningSchedules.innerHTML = '';
+            afternoonSchedules.innerHTML = '';
+
+            for (let i = 0; i < 30; i++) {
+                const isMorning = i < 15;
+                const scheduleData = schedules.find(s => s.id === i) || {
+                    id: i,
+                    name: `Jadwal ${i + 1}`,
+                    time: isMorning ? `0${7 + Math.floor(i/2)}:${i % 2 === 0 ? '00' : '30'}` : `${12 + Math.floor((i-15)/2)}:${(i-15) % 2 === 0 ? '00' : '30'}`,
+                    soundIndex: sounds.length > 0 ? 0 : -1,
+                    active: true
+                };
+
+                let displayTime = scheduleData.time;
+                if (!isMorning) {
+                    const [hours, minutes] = scheduleData.time.split(':');
+                    displayTime = `${hours.padStart(2, '0')}:${minutes}`;
+                }
+
+                const scheduleElement = document.createElement('div');
+                scheduleElement.className = `schedule-card ${isMorning ? 'morning-schedule' : 'afternoon-schedule'} bg-white p-3 rounded-lg shadow-sm border`;
+                scheduleElement.innerHTML = `
+                    <div class="mb-2">
+                        <label class="block text-xs text-gray-500 mb-1">Nama Jadwal</label>
+                        <input type="text" value="${scheduleData.name}" onchange="updateScheduleName(${i}, this.value)" class="w-full px-2 py-1 border border-gray-300 rounded text-sm font-medium">
+                    </div>
+                    <div class="flex items-center space-x-2 mb-2">
+                        <label class="block text-xs text-gray-500 mb-1">Waktu</label>
+                        <input type="time" value="${displayTime}" onchange="updateScheduleTime(${i}, this.value)" class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm">
+                    </div>
+                    <div class="mb-2">
+                        <label class="block text-xs text-gray-500 mb-1">Suara</label>
+                        <select onchange="updateScheduleSound(${i}, this.value)" class="w-full px-2 py-1 border border-gray-300 rounded text-sm">
+                            ${sounds.length > 0 ? 
+                                sounds.map((sound, idx) => `
+                                    <option value="${idx}" ${idx === scheduleData.soundIndex ? 'selected' : ''}>
+                                        ${sound.name}
+                                    </option>
+                                `).join('') : 
+                                '<option value="-1">Tidak ada suara</option>'
+                            }
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" ${scheduleData.active ? 'checked' : ''} onchange="toggleScheduleActive(${i}, this.checked)" class="mr-2">
+                            <span class="text-sm">Aktif</span>
+                        </label>
+                    </div>
+                `;
+
+                if (isMorning) {
+                    morningSchedules.appendChild(scheduleElement);
+                } else {
+                    afternoonSchedules.appendChild(scheduleElement);
+                }
+            }
+
+            localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+        }
+
+        function playSound(index) {
+            if (sounds[index] && sounds[index].blobUrl) {
+                bellAudio.src = sounds[index].blobUrl;
+                bellAudio.play().catch(e => console.log('Audio play failed:', e));
+            }
+        }
+
+        addSoundForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('soundName').value;
+            const file = soundFileInput.files[0];
+
+            if (name && file && file.type.startsWith('audio/')) {
+                try {
+                    const blobUrl = URL.createObjectURL(file);
+                    
+                    sounds.push({
+                        name,
+                        type: file.type,
+                        size: file.size,
+                        blobUrl: blobUrl,
+                        fileName: file.name
+                    });
+                    
+                    localStorage.setItem('bellSounds', JSON.stringify(sounds));
+                    renderSounds();
+                    renderSchedules();
+                    addSoundForm.reset();
+                    
+                    alert('Suara berhasil ditambahkan!');
+                } catch (error) {
+                    alert('Error: Gagal menambahkan suara. Pastikan file audio valid.');
+                    console.error('Error adding sound:', error);
+                }
+            } else {
+                alert('Silakan pilih file audio yang valid (MP3, WAV, dll.)');
+            }
+        });
+
+        function deleteSound(index) {
+            if (confirm('Hapus suara ini?')) {
+                if (sounds[index].blobUrl) {
+                    URL.revokeObjectURL(sounds[index].blobUrl);
+                }
+                
+                sounds.splice(index, 1);
+                localStorage.setItem('bellSounds', JSON.stringify(sounds));
+                renderSounds();
+                renderSchedules();
+            }
+        }
+
+        function updateScheduleName(id, name) {
+            let schedule = schedules.find(s => s.id === id);
+            if (!schedule) {
+                schedule = { id, name, time: id < 15 ? '07:00' : '12:00', soundIndex: sounds.length > 0 ? 0 : -1, active: true };
+                schedules.push(schedule);
+            } else {
+                schedule.name = name;
+            }
+            localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+        }
+
+        function updateScheduleTime(id, time) {
+            let schedule = schedules.find(s => s.id === id);
+            if (!schedule) {
+                schedule = { id, name: `Jadwal ${id + 1}`, time, soundIndex: sounds.length > 0 ? 0 : -1, active: true };
+                schedules.push(schedule);
+            } else {
+                schedule.time = time;
+            }
+            localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+        }
+
+        function updateScheduleSound(id, soundIndex) {
+            let schedule = schedules.find(s => s.id === id);
+            const index = parseInt(soundIndex);
+            
+            if (!schedule) {
+                schedule = { id, name: `Jadwal ${id + 1}`, time: id < 15 ? '07:00' : '12:00', soundIndex: index, active: true };
+                schedules.push(schedule);
+            } else {
+                schedule.soundIndex = index;
+            }
+            localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+        }
+
+        function toggleScheduleActive(id, active) {
+            let schedule = schedules.find(s => s.id === id);
+            if (!schedule) {
+                schedule = { id, name: `Jadwal ${id + 1}`, time: id < 15 ? '07:00' : '12:00', soundIndex: sounds.length > 0 ? 0 : -1, active };
+                schedules.push(schedule);
+            } else {
+                schedule.active = active;
+            }
+            localStorage.setItem('bellSchedules', JSON.stringify(schedules));
+        }
+
+        statusToggle.addEventListener('click', function() {
+            bellStatus = !bellStatus;
+            localStorage.setItem('bellStatus', bellStatus.toString());
+            updateStatusUI();
+            
+            if (bellStatus) {
+                alert('Sistem bell sekarang AKTIF. Bell akan berbunyi sesuai jadwal.');
+            } else {
+                alert('Sistem bell sekarang NON-AKTIF.');
+            }
+        });
+
+        function startBellChecker() {
+            setInterval(() => {
+                if (!bellStatus || sounds.length === 0) return;
+
+                const now = new Date();
+                const currentTime = now.toTimeString().substring(0, 5);
+                const currentDay = now.getDay();
+
+                if (currentDay === 0 || currentDay === 6) return;
+
+                schedules.forEach(schedule => {
+                    if (
+                        schedule.active &&
+                        schedule.soundIndex >= 0 &&
+                        schedule.time === currentTime &&
+                        lastTriggered !== schedule.id
+                    ) {
+                        playSound(schedule.soundIndex);
+                        lastTriggered = schedule.id;
+                        console.log(`Bell berbunyi: ${schedule.name} - ${schedule.time}`);
+                    }
+                });
+
+                // Reset jika waktunya sudah lewat
+                if (lastTriggered !== null && !schedules.some(s => s.id === lastTriggered && s.time === currentTime)) {
+                    lastTriggered = null;
+                }
+            }, 1000);
+        }
+
+        // New: Function to update realtime clock
+        function updateRealtimeClock() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit' 
+            };
+            realtimeClock.textContent = now.toLocaleDateString('id-ID', options);
+            setTimeout(updateRealtimeClock, 1000); // Update every second
+        }
+
+        window.addEventListener('beforeunload', function() {
+            sounds.forEach(sound => {
+                if (sound.blobUrl) {
+                    URL.revokeObjectURL(sound.blobUrl);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', initData);
+    let isBellActive = false;
+let bellSound = '';
+const jadwalPagi = [];
+const jadwalSiang = [];
+
+function toggleBell() {
+    isBellActive = !isBellActive;
+    document.getElementById('toggleBell').innerText = isBellActive ? 'Nonaktifkan Bell' : 'Aktifkan Bell';
+    if (isBellActive) {
+        startBellSchedule();
+    }
+}
+
+function startBellSchedule() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    // Cek jadwal pagi
+    jadwalPagi.forEach(jadwal => {
+        const [jam, menit] = jadwal.split(':').map(Number);
+        if (jam === currentHour && menit === currentMinute) {
+            playBell();
+        }
+    });
+
+    // Cek jadwal siang
+    jadwalSiang.forEach(jadwal => {
+        const [jam, menit] = jadwal.split(':').map(Number);
+        if (jam === currentHour && menit === currentMinute) {
+            playBell();
+        }
+    });
+
+    // Cek setiap menit
+    setTimeout(startBellSchedule, 60000);
+}
+
+function playBell() {
+    const audio = document.getElementById('bellSound');
+    audio.src = 'path/to/your/sound/file.mp3'; // Ganti dengan path file suara
+    audio.play();
+    setTimeout(() => {
+        audio.pause();
+        audio.currentTime = 0;
+    }, 30000); // Berhenti setelah 30 detik
+}
+
+function tambahJadwal(jadwalType) {
+    const waktu = prompt('Masukkan waktu (HH:MM):');
+    if (waktu) {
+        if (jadwalType === 'pagi' && jadwalPagi.length < 10) {
+            jadwalPagi.push(waktu);
+            updateJadwalDisplay('pagi');
+        } else if (jadwalType === 'siang' && jadwalSiang.length < 10) {
+            jadwalSiang.push(waktu);
+            updateJadwalDisplay('siang');
+        } else {
+            alert('Jadwal sudah penuh!');
+        }
+    }
+}
+
+function updateJadwalDisplay(jadwalType) {
+    const ul = document.getElementById(`jadwal${jadwalType.charAt(0).toUpperCase() + jadwalType.slice(1)}`);
+    ul.innerHTML = '';
+    const jadwalList = jadwalType === 'pagi' ? jadwalPagi : jadwalSiang;
+    jadwalList.forEach(jadwal => {
+        const li = document.createElement('li');
+        li.textContent = jadwal;
+        ul.appendChild(li);
+    });
+}
+
+
+
+
+    </script>
+
+    <!-- Footer -->
+    <footer class="text-center mt-12 opacity-80">
+        <p>© 2025 Bell Sekolah Digital V1.01 by nj-dejunk <i class="fas fa-heart text-red-400"></i></p>
+    </footer>
+</body>
+</html>
